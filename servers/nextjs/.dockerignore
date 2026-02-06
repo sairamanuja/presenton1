@@ -1,0 +1,10 @@
+node_modules
+.next
+.next-build
+cypress
+cypress.config.ts
+tsconfig.tsbuildinfo
+README.md
+Dockerfile
+.DS_Store
+*.swp

@@ -1,0 +1,11 @@
+tmp
+debug
+.venv
+__pycache__
+**/__pycache__
+tests
+pyproject.toml
+Dockerfile
+.DS_Store
+*.swp
+*.pyc

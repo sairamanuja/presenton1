@@ -1,0 +1,62 @@
+version: '3.8'
+
+networks:
+  presenton-net:
+    driver: bridge
+
+services:
+  fastapi:
+    build:
+      context: ./servers/fastapi
+      dockerfile: Dockerfile
+    container_name: presenton-fastapi
+    networks:
+      - presenton-net
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./container.db
+      - LLM=google
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - PEXELS_API_KEY=${PEXELS_API_KEY}
+      - PIXABAY_API_KEY=${PIXABAY_API_KEY}
+      - APP_DATA_DIRECTORY=/app_data
+    volumes:
+      - ./app_data:/app_data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/mock/presentation-generation-completed"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  nextjs:
+    build:
+      context: ./servers/nextjs
+      dockerfile: Dockerfile
+    container_name: presenton-nextjs
+    networks:
+      - presenton-net
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - FASTAPI_URL=http://presenton-fastapi:8000
+      - APP_DATA_DIRECTORY=/app_data
+      - LLM=google
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - PEXELS_API_KEY=${PEXELS_API_KEY}
+      - PIXABAY_API_KEY=${PIXABAY_API_KEY}
+    volumes:
+      - ./app_data:/app_data
+    depends_on:
+      - fastapi
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
