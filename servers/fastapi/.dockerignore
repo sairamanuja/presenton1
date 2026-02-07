@@ -5,7 +5,13 @@ __pycache__
 **/__pycache__
 tests
 pyproject.toml
+uv.lock
+.python-version
 Dockerfile
 .DS_Store
 *.swp
 *.pyc
+.env
+.env.*
+chroma/
+chroma.sqlite3

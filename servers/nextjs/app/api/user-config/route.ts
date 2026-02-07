@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
+import path from "path";
 import { LLMConfig } from "@/types/llm_config";
 
 const userConfigPath = process.env.USER_CONFIG_PATH!;
@@ -31,6 +32,11 @@ export async function POST(request: Request) {
     return NextResponse.json({
       error: "You are not allowed to access this resource",
     });
+  }
+
+  const configDir = path.dirname(userConfigPath);
+  if (!fs.existsSync(configDir)) {
+    fs.mkdirSync(configDir, { recursive: true });
   }
 
   const userConfig = await request.json();

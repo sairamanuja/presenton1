@@ -42,14 +42,24 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /app
 
-ENV APP_DATA_DIRECTORY=/app_data
-ENV USER_CONFIG_PATH=/app_data/userConfig.json
-ENV TEMP_DIRECTORY=/tmp/presenton
+# Environment variables for directories and paths
+ENV APP_DATA_DIRECTORY=/app_data \
+    USER_CONFIG_PATH=/app_data/userConfig.json \
+    TEMP_DIRECTORY=/tmp/presenton \
+    PYTHONUNBUFFERED=1
 
-# Copy only the FastAPI source code
+# Create required directories
+RUN mkdir -p /app_data /tmp/presenton
+
+# Copy FastAPI source code (respects .dockerignore)
 COPY . .
 
-EXPOSE 8000
+# Pre-download ChromaDB embedding model during build (avoids timeout at runtime)
+RUN python download_chroma_model.py
 
-# Bind to 0.0.0.0 for Cloud Run (server.py defaults to 127.0.0.1)
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-level", "info"]
+# Cloud Run expects PORT env var (default 8080)
+ENV PORT=8080
+EXPOSE 8080
+
+# Use PORT variable for dynamic port binding
+CMD ["sh", "-c", "uvicorn api.main:app --host 0.0.0.0 --port ${PORT} --log-level info"]
