@@ -12,6 +12,7 @@ from utils.get_env import (
     get_dall_e_3_quality_env,
     get_gpt_image_1_5_quality_env,
     get_pexels_api_key_env,
+    get_gemini_flash_model_env,
 )
 from utils.get_env import get_pixabay_api_key_env
 from utils.get_env import get_comfyui_url_env
@@ -210,8 +211,9 @@ class ImageGenerationService:
         self, prompt: str, output_directory: str
     ) -> str:
         """Generate image using Imagen 4.0 Fast."""
+        model = get_gemini_flash_model_env()
         return await self._generate_image_google_images(
-            prompt, output_directory, "models/imagen-4.0-fast-generate-001"
+            prompt, output_directory, model
         )
 
     async def generate_image_nanobanana_pro(

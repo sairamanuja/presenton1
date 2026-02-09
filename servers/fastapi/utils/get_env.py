@@ -125,3 +125,7 @@ def get_gcs_bucket_env():
 
 def get_gcs_prefix_env():
     return os.getenv("GCS_PREFIX")
+
+
+def get_gemini_flash_model_env():
+    return os.getenv("GEMINI_FLASH_MODEL", "models/imagen-4.0-fast-generate-001")
