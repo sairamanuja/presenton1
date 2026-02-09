@@ -16,6 +16,10 @@ const nextConfig = {
         destination: `${backendUrl}/app_data/fonts/:path*`,
       },
       {
+        source: '/app_data/images/:path*',
+        destination: `${backendUrl}/app_data/images/:path*`,
+      },
+      {
         source: '/api/v1/:path*',
         destination: `${backendUrl}/api/v1/:path*`,
       },

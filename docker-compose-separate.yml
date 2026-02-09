@@ -13,7 +13,7 @@ services:
     networks:
       - presenton-net
     ports:
-      - "8000:8000"
+      - "8000:8080"
     environment:
       - DATABASE_URL=sqlite:///./container.db
       - LLM=google
@@ -26,7 +26,7 @@ services:
     volumes:
       - ./app_data:/app_data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/mock/presentation-generation-completed"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/v1/mock/presentation-generation-completed"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -43,7 +43,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - FASTAPI_URL=http://presenton-fastapi:8000
+      - FASTAPI_URL=http://presenton-fastapi:8080
       - APP_DATA_DIRECTORY=/app_data
       - LLM=google
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
