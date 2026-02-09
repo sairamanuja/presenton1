@@ -10,7 +10,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 RUN pip install --no-cache-dir \
     aiohttp aiomysql aiosqlite asyncpg fastapi[standard] \
     pathvalidate pdfplumber chromadb sqlmodel \
-    anthropic google-genai openai fastmcp dirtyjson \
+    anthropic google-genai openai fastmcp dirtyjson google-cloud-storage \
     && pip install --no-cache-dir docling --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Strip debug symbols from native libs and remove bloat

@@ -26,6 +26,7 @@ from utils.image_provider import (
     is_dalle3_selected,
     is_comfyui_selected,
 )
+from utils.gcs_storage import maybe_upload_file_to_gcs
 import uuid
 
 
@@ -90,6 +91,9 @@ class ImageGenerationService:
                 if image_path.startswith("http"):
                     return image_path
                 elif os.path.exists(image_path):
+                    gcs_url = maybe_upload_file_to_gcs(image_path)
+                    if gcs_url:
+                        image_path = gcs_url
                     return ImageAsset(
                         path=image_path,
                         is_uploaded=False,

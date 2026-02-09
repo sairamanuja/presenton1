@@ -84,12 +84,6 @@ def get_image_provider_env():
 def get_pixabay_api_key_env():
     return os.getenv("PIXABAY_API_KEY")
 
-def get_nanobanana_api_key_env():
-    return os.getenv("NANOBANANA_API_KEY")
-
-def get_nanobanana_api_url_env():
-    return os.getenv("NANOBANANA_API_URL", "https://api.nanobanana.com/v1")
-
 
 def get_tool_calls_env():
     return os.getenv("TOOL_CALLS")
@@ -123,3 +117,11 @@ def get_dall_e_3_quality_env():
 # Gpt Image 1.5 Quality
 def get_gpt_image_1_5_quality_env():
     return os.getenv("GPT_IMAGE_1_5_QUALITY")
+
+
+def get_gcs_bucket_env():
+    return os.getenv("GCS_BUCKET")
+
+
+def get_gcs_prefix_env():
+    return os.getenv("GCS_PREFIX")

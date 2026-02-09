@@ -42,6 +42,10 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "storage.googleapis.com",
+      },
+      {
+        protocol: "https",
         hostname: "img.icons8.com",
       },
       {
