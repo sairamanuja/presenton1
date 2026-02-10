@@ -8,3 +8,5 @@ README.md
 Dockerfile
 .DS_Store
 *.swp
+.env
+.env.*

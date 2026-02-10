@@ -18,10 +18,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Provide backend URL at build time for Next.js rewrites
-ARG INTERNAL_API_URL=http://localhost:8000
-ENV INTERNAL_API_URL=${INTERNAL_API_URL}
-
 # Build Next.js app (outputs to .next-build/standalone)
 RUN npm run build
 
@@ -42,10 +38,6 @@ ENV NODE_ENV=production \
     APP_DATA_DIRECTORY=/app_data \
     USER_CONFIG_PATH=/app_data/userConfig.json \
     HOSTNAME=0.0.0.0
-
-# Preserve backend URL for any runtime usage
-ARG INTERNAL_API_URL=http://localhost:8000
-ENV INTERNAL_API_URL=${INTERNAL_API_URL}
 
 # Copy standalone server (includes all Node.js files needed at runtime)
 COPY --from=builder /app/.next-build/standalone ./
