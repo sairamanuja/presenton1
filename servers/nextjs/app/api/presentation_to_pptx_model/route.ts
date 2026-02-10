@@ -76,6 +76,10 @@ async function getPresentationId(request: NextRequest) {
 }
 
 async function getBrowserAndPage(id: string): Promise<[Browser, Page]> {
+  const port = process.env.PORT || "3000";
+  const baseUrl = `http://127.0.0.1:${port}`;
+  const pdfUrl = new URL("/pdf-maker", baseUrl);
+  pdfUrl.searchParams.set("id", id);
   const browser = await puppeteer.launch({
     executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
     headless: true,
@@ -98,7 +102,7 @@ async function getBrowserAndPage(id: string): Promise<[Browser, Page]> {
   await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 1 });
   page.setDefaultNavigationTimeout(300000);
   page.setDefaultTimeout(300000);
-  await page.goto(`http://localhost/pdf-maker?id=${id}`, {
+  await page.goto(pdfUrl.toString(), {
     waitUntil: "networkidle0",
     timeout: 300000,
   });
@@ -111,12 +115,11 @@ async function closeBrowserAndPage(browser: Browser | null, page: Page | null) {
 }
 
 function getScreenshotsDir() {
-  const tempDir = process.env.TEMP_DIRECTORY;
-  if (!tempDir) {
+  const tempDir = process.env.TEMP_DIRECTORY || "/tmp/presenton";
+  if (!process.env.TEMP_DIRECTORY) {
     console.warn(
-      "TEMP_DIRECTORY environment variable not set, skipping screenshot"
+      "TEMP_DIRECTORY not set; defaulting to /tmp/presenton for screenshots"
     );
-    throw new ApiError("TEMP_DIRECTORY environment variable not set");
   }
   const screenshotsDir = path.join(tempDir, "screenshots");
   if (!fs.existsSync(screenshotsDir)) {

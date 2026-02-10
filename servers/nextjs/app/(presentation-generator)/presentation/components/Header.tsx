@@ -141,16 +141,31 @@ const Header = ({
     trackEvent(MixpanelEvent.Header_ReGenerate_Button_Clicked, { pathname });
     router.push(`/presentation?id=${presentation_id}&stream=true`);
   };
-  const downloadLink = (path: string) => {
-    // if we have popup access give direct download if not redirect to the path
-    if (window.opener) {
-      window.open(path, '_blank');
-    } else {
+  const downloadLink = async (path: string) => {
+    try {
+      // Fetch the file as a blob to force download
+      const response = await fetch(path);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      
       const link = document.createElement('a');
-      link.href = path;
+      link.href = url;
       link.download = path.split('/').pop() || 'download';
       document.body.appendChild(link);
       link.click();
+      
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      // Fallback to direct link if blob download fails
+      const link = document.createElement('a');
+      link.href = path;
+      link.download = path.split('/').pop() || 'download';
+      link.target = '_self';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   };
 
