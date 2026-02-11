@@ -144,28 +144,41 @@ const Header = ({
   const downloadLink = async (path: string) => {
     try {
       // Fetch the file as a blob to force download
-      const response = await fetch(path);
+      const response = await fetch(path, {
+        method: 'GET',
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Download failed');
+      }
+      
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       
+      // Create a hidden link element
       const link = document.createElement('a');
+      link.style.display = 'none';
       link.href = url;
-      link.download = path.split('/').pop() || 'download';
+      link.download = path.split('/').pop() || 'presentation';
+      link.setAttribute('download', path.split('/').pop() || 'presentation'); // Force download attribute
+      
       document.body.appendChild(link);
+      
+      // Trigger download
       link.click();
       
-      // Cleanup
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      // Cleanup after a short delay
+      setTimeout(() => {
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 100);
     } catch (error) {
-      // Fallback to direct link if blob download fails
-      const link = document.createElement('a');
-      link.href = path;
-      link.download = path.split('/').pop() || 'download';
-      link.target = '_self';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      console.error('Download error:', error);
+      // Fallback: open in new window with download hint
+      window.location.href = path;
     }
   };
 
