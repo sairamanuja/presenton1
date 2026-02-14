@@ -16,13 +16,28 @@ const Header = () => {
         <div className="flex items-center justify-between py-1">
           <div className="flex items-center gap-3">
             {(pathname !== "/upload" && pathname !== "/dashboard") && <BackBtn />}
-            <Link href="/dashboard" onClick={() => trackEvent(MixpanelEvent.Navigation, { from: pathname, to: "/dashboard" })}>
+            <div>
+              <img
+                src="/logo-white.png"
+                alt="Presentation logo"
+                className="h-16"
+              />
+            </div>
+            {/* Logo link (disabled) */}
+            {/*
+            <Link
+              href="/dashboard"
+              onClick={() =>
+                trackEvent(MixpanelEvent.Navigation, { from: pathname, to: "/dashboard" })
+              }
+            >
               <img
                 src="/logo-white.png"
                 alt="Presentation logo"
                 className="h-16"
               />
             </Link>
+            */}
           </div>
           <div className="flex items-center gap-3">
             <Link
